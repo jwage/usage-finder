@@ -25,8 +25,6 @@ final class FindClassMethodUsagesTest extends TestCase
         $process = new Process(['php', $composerPath, 'install'], __DIR__ . '/example');
         $process->run();
 
-        echo $process->getOutput();
-
         $classMethodReference = new ClassMethodReference('Doctrine\Common\Collections\Collection::slice');
 
         $expectedUsages = [

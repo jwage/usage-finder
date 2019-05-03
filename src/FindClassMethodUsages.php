@@ -34,6 +34,7 @@ final class FindClassMethodUsages
             'USAGE_FINDER_CLASS_NAME'  => $classMethodReference->getClassName(),
             'USAGE_FINDER_METHOD_NAME' => $classMethodReference->getMethodName(),
         ]);
+        $process->setTimeout(0);
 
         $process->mustRun();
 
