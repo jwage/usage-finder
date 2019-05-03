@@ -1,0 +1,43 @@
+{
+    "name": "jwage/usage-finder",
+    "type": "library",
+    "description": "Find class method usages in a code base.",
+    "keywords": ["php", "database", "migrations", "dbal"],
+    "homepage": "https://www.jwage.com",
+    "license": "MIT",
+    "authors": [
+        {"name": "Jonathan Wage", "email": "jonwage@gmail.com"}
+    ],
+    "require": {
+        "php": "^7.2",
+        "nikic/php-parser": "^4.2",
+        "vimeo/psalm": "^3.2",
+        "symfony/process": "^4.2",
+        "symfony/console": "^4.2",
+        "symfony/stopwatch": "^4.2"
+    },
+    "require-dev": {
+        "doctrine/coding-standard": "^6.0",
+        "phpunit/phpunit": "^8.1",
+        "psalm/plugin-phpunit": "^0.5.5"
+    },
+    "autoload": {
+        "psr-4": { "UsageFinder\\": "src" }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "UsageFinder\\Tests\\": "tests"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    },
+    "bin": [
+        "bin/usage-finder"
+    ]
+}

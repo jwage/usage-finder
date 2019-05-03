@@ -1,0 +1,8 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+namespace UsageFinder;
+
+require __DIR__ . '/usage-finder.php';

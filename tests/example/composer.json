@@ -1,0 +1,8 @@
+{
+    "require": {
+        "doctrine/collections": "^1.6"
+    },
+    "autoload": {
+        "psr-4": { "Test\\": "src" }
+    }
+}
