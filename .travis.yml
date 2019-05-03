@@ -26,7 +26,7 @@ jobs:
       install:
         - rm composer.lock
         - travis_retry composer update --prefer-dist --prefer-lowest
-       - ./download-composer.sh
+        - ./download-composer.sh
 
     - stage: Test
       env: COVERAGE
