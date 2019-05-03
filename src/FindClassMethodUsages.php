@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace UsageFinder;
 
 use Symfony\Component\Process\Process;
+use function array_map;
 use function copy;
+use function is_array;
 use function json_decode;
 use function realpath;
 use function sprintf;
@@ -50,11 +52,11 @@ final class FindClassMethodUsages
 
         $results = json_decode($output, true);
 
-        if (!is_array($results)) {
+        if (! is_array($results)) {
             return [];
         }
 
-        return array_map(function(array $result) {
+        return array_map(static function (array $result) : ClassMethodUsage {
             return new ClassMethodUsage(
                 $result['file_name'],
                 $result['line_from']
