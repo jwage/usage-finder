@@ -50,16 +50,16 @@ final class FindClassMethodUsages
 
         $results = json_decode($output, true);
 
-        $usages = [];
+        if (!is_array($results)) {
+            return [];
+        }
 
-        foreach ($results as $result) {
-            $usages[] = new ClassMethodUsage(
+        return array_map(function(array $result) {
+            return new ClassMethodUsage(
                 $result['file_name'],
                 $result['line_from']
             );
-        }
-
-        return $usages;
+        }, $results);
     }
 
     private function copyFindClassMethodUsagesPlugin(string $path) : void
