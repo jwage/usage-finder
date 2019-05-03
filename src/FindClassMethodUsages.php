@@ -18,8 +18,11 @@ final class FindClassMethodUsages
     /**
      * @return array<int, ClassMethodUsage>
      */
-    public function __invoke(string $path, ClassMethodReference $classMethodReference) : array
-    {
+    public function __invoke(
+        string $path,
+        ClassMethodReference $classMethodReference,
+        int $threads = 1
+    ) : array {
         $this->copyFindClassMethodUsagesPlugin($path);
 
         $configFile = (new CreateTemporaryPsalmXmlFile())->__invoke($path);
@@ -30,6 +33,7 @@ final class FindClassMethodUsages
             'vendor/bin/psalm',
             sprintf('--config=%s', $configFile),
             sprintf('--root=%s', $path),
+            sprintf('--threads=%d', $threads),
             '--output-format=json',
         ], $rootDir, [
             'USAGE_FINDER_NAME'        => $classMethodReference->getName(),

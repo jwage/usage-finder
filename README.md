@@ -24,6 +24,12 @@ You can use the `vendor/bin/usage-finder` command line tool to execute your sear
 
     Finished in 7193.1ms
 
+### Threads
+
+You can run `usage-finder` with multiple threads by passing the `--threads` option:
+
+    $ ./vendor/bin/usage-finder find /data/repositories/orm/ "Doctrine\Common\Collections\Collection::slice" --threads=2
+
 ## Manual Usage
 
 You can manually use the tool as well if you want to integrate in to an existing tool:
