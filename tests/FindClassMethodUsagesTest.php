@@ -36,7 +36,7 @@ final class FindClassMethodUsagesTest extends TestCase
         $examplePath = __DIR__ . '/example';
 
         $usages = (new FindClassMethodUsages())->
-            __invoke($examplePath, $classMethodReference);
+            __invoke($examplePath, $classMethodReference, 2);
 
         self::assertCount(3, $usages);
         self::assertEquals($expectedUsages, $usages);

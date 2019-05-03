@@ -7,6 +7,7 @@ namespace UsageFinder\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use UsageFinder\ClassMethodReference;
@@ -25,7 +26,8 @@ final class FindClassMethodUsagesCommand extends Command
             ->setName('find')
             ->setDescription('Find class method usages in the given path.')
             ->addArgument('path', InputArgument::REQUIRED, 'The path to search in.')
-            ->addArgument('find', InputArgument::REQUIRED, 'What to search for.');
+            ->addArgument('find', InputArgument::REQUIRED, 'What to search for.')
+            ->addOption('threads', 't', InputOption::VALUE_REQUIRED, 'How many threads to run psalm with.', 1);
     }
 
     public function execute(InputInterface $input, OutputInterface $output) : void
@@ -35,6 +37,8 @@ final class FindClassMethodUsagesCommand extends Command
 
         $find = $input->getArgument('find');
         assert(is_string($find));
+
+        $threads = (int) $input->getOption('threads');
 
         $classMethodReference = new ClassMethodReference($find);
 
@@ -48,7 +52,11 @@ final class FindClassMethodUsagesCommand extends Command
         $stopwatch = new Stopwatch(true);
         $stopwatch->start('usage-finder');
 
-        $classMethodUsages = (new FindClassMethodUsages())->__invoke($path, $classMethodReference);
+        $classMethodUsages = (new FindClassMethodUsages())->__invoke(
+            $path,
+            $classMethodReference,
+            $threads
+        );
 
         $this->outputClassMethodUsages($classMethodUsages, $output);
 
