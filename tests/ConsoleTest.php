@@ -4,11 +4,35 @@ declare(strict_types=1);
 
 namespace UsageFinder\Tests;
 
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Process\Process;
+use UsageFinder\Command\FindClassMethodUsagesCommand;
 
 final class ConsoleTest extends TestCase
 {
-    public function testExecute() : void
+    public function testCommand() : void
+    {
+        $application = new Application();
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput([
+            'command' => 'find',
+            'path' => 'tests/example',
+            'find' => 'Doctrine\Common\Collections\Collection::slice',
+        ]);
+
+        $output = new BufferedOutput();
+
+        $application->add(new FindClassMethodUsagesCommand());
+
+        $application->run($input, $output);
+
+        self::assertProcessOutput($output->fetch());
+    }
+
+    public function testBin() : void
     {
         $process = new Process([
             'bin/usage-finder',
@@ -21,6 +45,11 @@ final class ConsoleTest extends TestCase
 
         $output = $process->getOutput();
 
+        self::assertProcessOutput($output);
+    }
+
+    private static function assertProcessOutput(string $output) : void
+    {
         self::assertStringContainsString(
             'Searching for Doctrine\Common\Collections\Collection::slice in tests/example.',
             $output
