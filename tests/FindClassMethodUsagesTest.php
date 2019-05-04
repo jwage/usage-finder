@@ -4,33 +4,38 @@ declare(strict_types=1);
 
 namespace UsageFinder\Tests;
 
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\Process\Process;
 use UsageFinder\ClassMethodReference;
 use UsageFinder\ClassMethodUsage;
 use UsageFinder\FindClassMethodUsages;
-use function file_exists;
 
 final class FindClassMethodUsagesTest extends TestCase
 {
-    public function testInvoke() : void
+    public function testInvokeUsagesFoundConcreteClass() : void
     {
-        $rootDir      = __DIR__ . '/..';
-        $composerPath = $rootDir . '/composer.phar';
+        $classMethodReference = new ClassMethodReference('Doctrine\Common\Collections\ArrayCollection::slice');
 
-        if (! file_exists($composerPath)) {
-            self::markTestSkipped('Download composer with the ./download-composer.sh shell script.');
-        }
+        $expectedUsages = [
+            new ClassMethodUsage('src/AppCode.php', 14, '            ->slice(0, 1);', 'slice'),
+            new ClassMethodUsage('src/AppCode.php', 20, '            ->slice(0, 3);', 'slice'),
+        ];
 
-        $process = new Process(['php', $composerPath, 'install'], __DIR__ . '/example');
-        $process->run();
+        $examplePath = __DIR__ . '/example';
 
+        $usages = (new FindClassMethodUsages())->
+            __invoke($examplePath, $classMethodReference, 2);
+
+        self::assertCount(2, $usages);
+        self::assertEquals($expectedUsages, $usages);
+    }
+
+    public function testInvokeUsagesFoundInterface() : void
+    {
         $classMethodReference = new ClassMethodReference('Doctrine\Common\Collections\Collection::slice');
 
         $expectedUsages = [
-            new ClassMethodUsage('src/AppCode.php', 14),
-            new ClassMethodUsage('src/AppCode.php', 17),
-            new ClassMethodUsage('src/AppCode.php', 20),
+            new ClassMethodUsage('src/AppCode.php', 14, '            ->slice(0, 1);', 'slice'),
+            new ClassMethodUsage('src/AppCode.php', 17, '            ->slice(0, 2);', 'slice'),
+            new ClassMethodUsage('src/AppCode.php', 20, '            ->slice(0, 3);', 'slice'),
         ];
 
         $examplePath = __DIR__ . '/example';
@@ -40,5 +45,41 @@ final class FindClassMethodUsagesTest extends TestCase
 
         self::assertCount(3, $usages);
         self::assertEquals($expectedUsages, $usages);
+    }
+
+    public function testInvokeNoUsagesFound() : void
+    {
+        $classMethodReference = new ClassMethodReference('Class::doesNotExist');
+
+        $examplePath = __DIR__ . '/example';
+
+        $usages = (new FindClassMethodUsages())->
+            __invoke($examplePath, $classMethodReference, 2);
+
+        self::assertCount(0, $usages);
+    }
+
+    public function testInvokeOnInvalidCode() : void
+    {
+        $classMethodReference = new ClassMethodReference('Class::doesNotExist');
+
+        $examplePath = __DIR__ . '/invalid-code-example';
+
+        $usages = (new FindClassMethodUsages())->
+            __invoke($examplePath, $classMethodReference, 2);
+
+        self::assertCount(0, $usages);
+    }
+
+    public function testInvokeNoProblems() : void
+    {
+        $classMethodReference = new ClassMethodReference('Class::doesNotExist');
+
+        $examplePath = __DIR__ . '/no-problems-example';
+
+        $usages = (new FindClassMethodUsages())->
+            __invoke($examplePath, $classMethodReference, 2);
+
+        self::assertCount(0, $usages);
     }
 }

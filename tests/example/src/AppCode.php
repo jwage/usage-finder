@@ -14,14 +14,14 @@ final class AppCode
             ->slice(0, 1);
 
         $sliced = (new MyCollection())
-            ->slice(0, 1);
+            ->slice(0, 2);
 
         $sliced = (new MyArrayCollection())
-            ->slice(0, 1);
+            ->slice(0, 3);
     }
 
     private function createArrayCollection() : ArrayCollection
     {
-        return new ArrayCollection([0, 1]);
+        return new ArrayCollection([0, 1, 2, 3]);
     }
 }

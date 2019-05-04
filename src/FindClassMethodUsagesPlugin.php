@@ -22,7 +22,7 @@ use function getenv;
 use function sprintf;
 use function strtolower;
 
-final class FindClassMethodUsagesPlugin implements AfterMethodCallAnalysisInterface
+class FindClassMethodUsagesPlugin implements AfterMethodCallAnalysisInterface
 {
     /**
      * @param  MethodCall|StaticCall $expr
@@ -39,14 +39,26 @@ final class FindClassMethodUsagesPlugin implements AfterMethodCallAnalysisInterf
         array &$file_replacements = [],
         ?Union &$return_type_candidate = null
     ) : void {
+        if (! $expr instanceof MethodCall) {
+            return;
+        }
+
         if (! self::isMethodWeWant($declaring_method_id, $codebase)) {
             return;
         }
 
+        static::bufferClassMethodUsage($expr, $statements_source, $declaring_method_id);
+    }
+
+    protected static function bufferClassMethodUsage(
+        MethodCall $methodCall,
+        StatementsSource $statements_source,
+        string $declaring_method_id
+    ) : void {
         IssueBuffer::accepts(
             new ClassMethodUsageFound(
-                sprintf('Found reference to %s', self::getFindName()),
-                new CodeLocation($statements_source, $expr->name)
+                sprintf('Found reference to %s', $declaring_method_id),
+                new CodeLocation($statements_source, $methodCall->name)
             ),
             $statements_source->getSuppressedIssues()
         );
@@ -66,12 +78,12 @@ final class FindClassMethodUsagesPlugin implements AfterMethodCallAnalysisInterf
 
     private static function getFindName() : string
     {
-        return self::getEnv('USAGE_FINDER_NAME') ?? '';
+        return self::getEnv('USAGE_FINDER_NAME');
     }
 
     private static function getFindClassName() : string
     {
-        return self::getEnv('USAGE_FINDER_CLASS_NAME') ?? '';
+        return self::getEnv('USAGE_FINDER_CLASS_NAME');
     }
 
     private static function getFindMethodName() : string
