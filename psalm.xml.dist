@@ -13,6 +13,10 @@
         <ignoreFiles>
             <directory name="vendor"/>
             <directory name="tests/example"/>
+            <directory name="tests/invalid-code-example"/>
+            <directory name="tests/no-problems-example"/>
+
+            <file name="tests/FindClassMethodUsagesPluginTest.php" />
         </ignoreFiles>
     </projectFiles>
 

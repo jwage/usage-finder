@@ -63,7 +63,6 @@ final class FindClassMethodUsagesCommand extends Command
         $event = $stopwatch->stop('usage-finder');
 
         $output->writeln([
-            '',
             sprintf('Finished in <info>%sms</info>', $event->getDuration()),
             '',
         ]);
@@ -81,6 +80,9 @@ final class FindClassMethodUsagesCommand extends Command
                     $classMethodUsage->getFile(),
                     $classMethodUsage->getLine()
                 ));
+
+                $output->writeln($classMethodUsage->getConsoleSnippet());
+                $output->writeln('');
             }
         } else {
             $output->writeln('Could not find any usages.');

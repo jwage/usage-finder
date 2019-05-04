@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace UsageFinder\Tests;
 
 use InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
 use UsageFinder\ClassMethodReference;
 
 final class ClassMethodReferenceTest extends TestCase

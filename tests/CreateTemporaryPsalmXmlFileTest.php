@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace UsageFinder\Tests;
 
-use PHPUnit\Framework\TestCase;
 use UsageFinder\CreateTemporaryPsalmXmlFile;
 use function file_exists;
 use function file_get_contents;
